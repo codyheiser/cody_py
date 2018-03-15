@@ -1,2 +1,2 @@
-# cody_py
+# codypy
 useful toolkit in Python3
