@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 
 # IMPORTANT: prevent truncation of long strings by Pandas
@@ -32,3 +33,34 @@ def max_char_repeats(word):
             count = 1
     counts.append(count)
     return max(counts)
+
+# read files into pandas dataframe
+def read_default(file):
+	'''
+	take path to any flat file (.txt, .csv) and return pd.dataframe
+	'''
+	if os.path.splitext(file)[1]=='.csv':
+		out = pd.read_csv(file)
+
+	elif os.path.splitext(file)[1]=='.txt':
+		out = pd.read_table(file)
+
+	return out
+
+# read all files from a given directory with
+def read_all(filetype, startdir = '.', recursive = True):
+	'''
+	Read in all files of common type from a folder, concatenate by row into pandas dataframe
+
+	filetype = string denoting which file to look for, including globs
+	startdir = directory to start looking in
+	recursive = search subdirectories?
+	'''
+	out = pd.dataframe() # initiate df for output
+	for dirpath, dirs, files in os.walk(startdir):
+		for file in files:
+			contents = read_default(os.path.join(dirpath,file))
+			contents['file'] = os.path.basename(file)
+			out.append(contents)
+
+	return out
