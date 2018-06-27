@@ -32,3 +32,10 @@ def max_char_repeats(word):
             count = 1
     counts.append(count)
     return max(counts)
+
+# move column to first position of Pandas dataframe
+def movetofirst(df, cols):
+    '''
+    move a list of columns "cols" to the first position (left) of dataframe "df"
+    '''
+    return df[cols+list(collections.OrderedDict.fromkeys([x for x in collections.OrderedDict.fromkeys(list(ce.columns)) if x not in collections.OrderedDict.fromkeys(cols)]).keys())]
