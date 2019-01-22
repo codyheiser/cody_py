@@ -109,12 +109,12 @@ def regression_intervals(x, y, p, x_range=None):
 		x_range = np.linspace(np.min(x)-1, np.max(x)+1, 100)
 
 	# Confidence Interval
-	ci = t*s_err*np.sqrt(1/n + (x_range-np.mean(x))**2/np.sum((x-np.mean(x))**2))
+	ci = t*s_err*np.sqrt(1+1/n+(x_range-np.mean(x))**2/np.sum((x-np.mean(x))**2))
 
 	# Prediction Interval
-	pi = t*s_err*np.sqrt(1+1/n+(x_range-np.mean(x))**2/np.sum((x-np.mean(x))**2))
+	pi = t*s_err*np.sqrt(1/n + (x_range-np.mean(x))**2/np.sum((x-np.mean(x))**2))
 
-	return pi, ci
+	return ci, pi
 
 
 # perform quick regression on x, y data and plot
@@ -131,13 +131,13 @@ def easy_regression(x, y, deg=1, plot_out=True):
 
 	x2 = np.linspace(np.min(x)-1, np.max(x)+1, 100)			# range over which to plot fit
 	y2 = np.polyval(p, x2)									# fit of new x range
-	pi, ci = regression_intervals(x, y, p, x2)				# calculate prediction and confidence intervals over x2
+	ci, pi = regression_intervals(x, y, p, x2)				# calculate prediction and confidence intervals over x2
 
 	if plot_out:
 		fig, ax = plt.subplots(figsize=(8, 6))
-		ax.fill_between(x2, y2+ci, y2-ci, color="0.5", edgecolor="", alpha=0.7, label='Prediction Interval')
-		ax.plot(x2, y2-pi, "--", color="0.5", label="95% Confidence Interval")
-		ax.plot(x2, y2+pi, "--", color="0.5")
+		ax.fill_between(x2, y2+pi, y2-pi, color="0.5", edgecolor="", alpha=0.7, label='Prediction Interval')
+		ax.plot(x2, y2-ci, "--", color="0.5", label="95% Confidence Interval")
+		ax.plot(x2, y2+ci, "--", color="0.5")
 		# fit
 		ax.plot(x2,y2,"-", color="0.1", linewidth=1.5, alpha=0.5, label="Fit")
 		# data
@@ -152,4 +152,4 @@ def easy_regression(x, y, deg=1, plot_out=True):
 		plt.show()
 		plt.close()
 
-	return p, pi, ci
+	return p, ci, pi
