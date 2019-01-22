@@ -14,12 +14,12 @@ def str_to_bool(s):
 	s = string that should be a boolean value (T or F)
 	output = corresponding boolean _True_ or _False_
 	'''
-    if s.title() == 'True':
-         return True
-    elif s.title() == 'False':
-         return False
-    else:
-         raise ValueError("Cannot convert {} to a bool".format(s))
+	if s.title() == 'True':
+		return True
+	elif s.title() == 'False':
+		return False
+	else:
+		raise ValueError("Cannot convert {} to a bool".format(s))
 
 
 # count homopolymer repeats in sequence
@@ -81,7 +81,7 @@ def read_all(filetype, startdir = '.', recursive = True):
 
 
 # calculate confidence and prediction intervals for polynomial regression fit
-def regression_intervals(x, y, p, x_range=np.linspace(np.min(x)-1, np.max(x)+1, 100)):
+def regression_intervals(x, y, p, x_range=None):
 	'''
 	Return prediction interval (pi) and 95% confidence interval (ci) for polynomial fit p (from np.polyfit) of data x, y
 
@@ -103,6 +103,10 @@ def regression_intervals(x, y, p, x_range=np.linspace(np.min(x)-1, np.max(x)+1, 
 	chi2 = np.sum((resid/y_model)**2)                      # chi-squared; estimates error in data
 	chi2_red = chi2/(dof)                                  # reduced chi-squared; measures goodness of fit
 	s_err = np.sqrt(np.sum(resid**2)/(dof))                # standard deviation of the error
+
+	# 100 linearly-spaced values between minimum and maximum in given x unless otherwise specified
+	if x_range is None:
+		x_range = np.linspace(np.min(x)-1, np.max(x)+1, 100)
 
 	# Confidence Interval
 	ci = t*s_err*np.sqrt(1/n + (x_range-np.mean(x))**2/np.sum((x-np.mean(x))**2))
