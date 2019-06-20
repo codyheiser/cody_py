@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 # IMPORTANT: prevent truncation of long strings by Pandas
 #	useful for sequences embedded in dataframes
 pd.set_option('display.max_colwidth', -1)
-
+# packages for reading in data files
+import h5py
 
 # convert appropriate strings ('TRUE', 'True', 'true') to boolean value (_True_)
 def str_to_bool(s):
@@ -78,6 +79,17 @@ def read_all(filetype, startdir = '.', recursive = True):
 			out.append(contents)
 
 	return out
+
+
+def read_hdf5(filename):
+		'''read in all replicates in an .hdf5 file'''
+		hdf5in = h5py.File(filename, 'r')
+		hdf5out = {} # initialize empty dictionary
+		for key in list(hdf5in.keys()):
+			hdf5out.update({key:hdf5in[key].value})
+
+		hdf5in.close()
+		return hdf5out
 
 
 # calculate confidence and prediction intervals for polynomial regression fit
